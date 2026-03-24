@@ -19,6 +19,7 @@ import {
 import {
   ROUGHNESS,
   THEME,
+  FREEDRAW_STROKE_SIZE_MULTIPLIER,
   isTransparent,
   assertNever,
   COLOR_PALETTE,
@@ -1190,7 +1191,7 @@ export const getFreedrawOutlinePoints = (
 
   return getStroke(inputPoints as number[][], {
     simulatePressure: element.simulatePressure,
-    size: element.strokeWidth * 4.25,
+    size: element.strokeWidth * FREEDRAW_STROKE_SIZE_MULTIPLIER,
     thinning: 0.6,
     smoothing: 0.5,
     streamline: 0.5,

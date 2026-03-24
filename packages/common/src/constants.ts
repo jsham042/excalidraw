@@ -409,6 +409,10 @@ export const STROKE_WIDTH = {
   extraBold: 4,
 } as const;
 
+export const FREEDRAW_STROKE_SIZE_MULTIPLIER = 3;
+export const FREEDRAW_CANVAS_PADDING_MULTIPLIER = 9;
+export const MIN_FREEDRAW_STROKE_WIDTH = 0.5;
+
 export const DEFAULT_ELEMENT_PROPS: {
   strokeColor: ExcalidrawElement["strokeColor"];
   backgroundColor: ExcalidrawElement["backgroundColor"];

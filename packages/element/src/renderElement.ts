@@ -15,6 +15,7 @@ import {
   ELEMENT_READY_TO_ERASE_OPACITY,
   FRAME_STYLE,
   DARK_THEME_FILTER,
+  FREEDRAW_CANVAS_PADDING_MULTIPLIER,
   MIME_TYPES,
   THEME,
   distance,
@@ -92,7 +93,7 @@ const isPendingImageElement = (
 const getCanvasPadding = (element: ExcalidrawElement) => {
   switch (element.type) {
     case "freedraw":
-      return element.strokeWidth * 12;
+      return element.strokeWidth * FREEDRAW_CANVAS_PADDING_MULTIPLIER;
     case "text":
       return element.fontSize / 2;
     case "arrow":
