@@ -76,7 +76,10 @@ export {
   copyText,
 } from "./actionClipboard";
 
-export { actionToggleGridMode } from "./actionToggleGridMode";
+export {
+  actionToggleGridMode,
+  actionToggleGridBackground,
+} from "./actionToggleGridMode";
 export { actionToggleZenMode } from "./actionToggleZenMode";
 export { actionToggleObjectsSnapMode } from "./actionToggleObjectsSnapMode";
 export { actionToggleArrowBinding } from "./actionToggleArrowBinding";
