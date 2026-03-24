@@ -2297,6 +2297,51 @@ export const gridIcon = createIcon(
   tablerIconProps,
 );
 
+export const gridLinesIcon = createIcon(
+  <g strokeWidth={1.5}>
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M3 6h18" />
+    <path d="M3 12h18" />
+    <path d="M3 18h18" />
+    <path d="M6 3v18" />
+    <path d="M12 3v18" />
+    <path d="M18 3v18" />
+  </g>,
+  tablerIconProps,
+);
+
+export const gridDotsIcon = createIcon(
+  <g strokeWidth={1.5}>
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <circle cx="5" cy="5" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="5" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="19" r="1.5" fill="currentColor" stroke="none" />
+  </g>,
+  tablerIconProps,
+);
+
+export const gridCrossIcon = createIcon(
+  <g strokeWidth={1.5}>
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M3 5h4M5 3v4" />
+    <path d="M10 5h4M12 3v4" />
+    <path d="M17 5h4M19 3v4" />
+    <path d="M3 12h4M5 10v4" />
+    <path d="M10 12h4M12 10v4" />
+    <path d="M17 12h4M19 10v4" />
+    <path d="M3 19h4M5 17v4" />
+    <path d="M10 19h4M12 17v4" />
+    <path d="M17 19h4M19 17v4" />
+  </g>,
+  tablerIconProps,
+);
+
 export const lineEditorIcon = createIcon(
   <g strokeWidth={1.5}>
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />

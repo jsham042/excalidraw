@@ -11,6 +11,8 @@ import {
   DEFAULT_ELEMENT_PROPS,
   DEFAULT_GRID_SIZE,
   DEFAULT_GRID_STEP,
+  DEFAULT_GRID_STYLE,
+  GRID_STYLES,
   randomId,
   getUpdatedTimestamp,
   updateActiveTool,
@@ -973,6 +975,9 @@ export const restoreAppState = (
     gridStep: getNormalizedGridStep(
       isFiniteNumber(appState.gridStep) ? appState.gridStep : DEFAULT_GRID_STEP,
     ),
+    gridStyle: Object.values(GRID_STYLES).includes(appState.gridStyle as any)
+      ? appState.gridStyle
+      : DEFAULT_GRID_STYLE,
     editingFrame: null,
   };
 };
