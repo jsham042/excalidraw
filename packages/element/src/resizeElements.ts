@@ -9,6 +9,7 @@ import {
 
 import {
   MIN_FONT_SIZE,
+  MIN_FREEDRAW_STROKE_WIDTH,
   SHIFT_LOCKING_ANGLE,
   rescalePoints,
   getFontString,
@@ -885,6 +886,20 @@ export const resizeSingleElement = (
       ...rescaledPoints,
     };
 
+    if (isFreeDrawElement(origElement)) {
+      const scaleFactorX = origElement.width
+        ? Math.abs(nextWidth) / origElement.width
+        : 1;
+      const scaleFactorY = origElement.height
+        ? Math.abs(nextHeight) / origElement.height
+        : 1;
+      const scaleFactor = Math.max(scaleFactorX, scaleFactorY);
+      (updates as Record<string, unknown>).strokeWidth = Math.max(
+        MIN_FREEDRAW_STROKE_WIDTH,
+        origElement.strokeWidth * scaleFactor,
+      );
+    }
+
     if (isBindingElement(latestElement)) {
       if (latestElement.startBinding) {
         updates = {
@@ -1334,6 +1349,7 @@ export const resizeMultipleElements = (
       > & {
         points?: ExcalidrawLinearElement["points"];
         fontSize?: ExcalidrawTextElement["fontSize"];
+        strokeWidth?: ExcalidrawElement["strokeWidth"];
         scale?: ExcalidrawImageElement["scale"];
         boundTextFontSize?: ExcalidrawTextElement["fontSize"];
         startBinding?: ExcalidrawElbowArrowElement["startBinding"];
@@ -1422,6 +1438,20 @@ export const resizeMultipleElements = (
           orig.scale[0] * flipFactorX,
           orig.scale[1] * flipFactorY,
         ];
+      }
+
+      if (isFreeDrawElement(orig)) {
+        const scaleFactorX = orig.width
+          ? Math.abs(width) / orig.width
+          : 1;
+        const scaleFactorY = orig.height
+          ? Math.abs(height) / orig.height
+          : 1;
+        const scaleFactor = Math.max(scaleFactorX, scaleFactorY);
+        update.strokeWidth = Math.max(
+          MIN_FREEDRAW_STROKE_WIDTH,
+          orig.strokeWidth * scaleFactor,
+        );
       }
 
       if (isTextElement(orig)) {
