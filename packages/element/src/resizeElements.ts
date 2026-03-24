@@ -885,6 +885,19 @@ export const resizeSingleElement = (
       ...rescaledPoints,
     };
 
+    if (isFreeDrawElement(origElement)) {
+      const scaleX = origElement.width
+        ? Math.abs(nextWidth) / origElement.width
+        : 1;
+      const scaleY = origElement.height
+        ? Math.abs(nextHeight) / origElement.height
+        : 1;
+      updates = {
+        ...updates,
+        strokeWidth: origElement.strokeWidth * Math.sqrt(scaleX * scaleY),
+      };
+    }
+
     if (isBindingElement(latestElement)) {
       if (latestElement.startBinding) {
         updates = {
@@ -1334,6 +1347,7 @@ export const resizeMultipleElements = (
       > & {
         points?: ExcalidrawLinearElement["points"];
         fontSize?: ExcalidrawTextElement["fontSize"];
+        strokeWidth?: ExcalidrawElement["strokeWidth"];
         scale?: ExcalidrawImageElement["scale"];
         boundTextFontSize?: ExcalidrawTextElement["fontSize"];
         startBinding?: ExcalidrawElbowArrowElement["startBinding"];
@@ -1430,6 +1444,10 @@ export const resizeMultipleElements = (
           return;
         }
         update.fontSize = metrics.size;
+      }
+
+      if (isFreeDrawElement(orig)) {
+        update.strokeWidth = orig.strokeWidth * Math.sqrt(scaleX * scaleY);
       }
 
       const boundTextElement = originalElementsMap.get(

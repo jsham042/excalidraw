@@ -304,6 +304,62 @@ describe.each(["line", "freedraw"] as const)("%s element", (type) => {
   });
 });
 
+describe("freedraw element strokeWidth", () => {
+  const points: LocalPoint[] = [
+    pointFrom(0, 0),
+    pointFrom(-2.474600807561444, 41.021700699972),
+    pointFrom(3.6627956000014024, 47.84174560617245),
+    pointFrom(40.495224145598115, 47.15909710753482),
+  ];
+
+  it("scales strokeWidth when resizing single element", async () => {
+    const element = UI.createElement("freedraw", { points });
+    const origStrokeWidth = element.strokeWidth;
+    const origWidth = element.width;
+    const origHeight = element.height;
+
+    UI.resize(element, "se", [origWidth, origHeight]);
+
+    expect(element.width).toBeCloseTo(origWidth * 2);
+    expect(element.height).toBeCloseTo(origHeight * 2);
+    expect(element.strokeWidth).toBeCloseTo(origStrokeWidth * 2);
+  });
+
+  it("scales strokeWidth down when shrinking single element", async () => {
+    const element = UI.createElement("freedraw", { points });
+    const origStrokeWidth = element.strokeWidth;
+    const origWidth = element.width;
+    const origHeight = element.height;
+
+    UI.resize(element, "se", [-origWidth / 2, -origHeight / 2]);
+
+    expect(element.width).toBeCloseTo(origWidth / 2);
+    expect(element.height).toBeCloseTo(origHeight / 2);
+    expect(element.strokeWidth).toBeCloseTo(origStrokeWidth / 2);
+  });
+
+  it("scales strokeWidth when resizing multiple elements", async () => {
+    const rect = UI.createElement("rectangle", {
+      position: 0,
+      width: 100,
+      height: 100,
+    });
+    const freedraw = UI.createElement("freedraw", {
+      x: 200,
+      y: 0,
+      points,
+    });
+    const origStrokeWidth = freedraw.strokeWidth;
+    const origRectStrokeWidth = rect.strokeWidth;
+
+    UI.resize([rect, freedraw], "se", [100, 100], { shift: true });
+
+    expect(freedraw.strokeWidth).toBeGreaterThan(origStrokeWidth);
+    // rectangle strokeWidth should NOT scale
+    expect(rect.strokeWidth).toEqual(origRectStrokeWidth);
+  });
+});
+
 describe("line element", () => {
   const points: LocalPoint[] = [
     pointFrom(0, 0),
