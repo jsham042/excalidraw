@@ -42,30 +42,44 @@ import type {
 } from "../scene/types";
 import type { StaticCanvasAppState, Zoom } from "../types";
 
-const GridLineColor = {
-  [THEME.LIGHT]: {
-    bold: "#dddddd",
-    regular: "#e5e5e5",
-  },
-  [THEME.DARK]: {
-    bold: applyDarkModeFilter("#dddddd"),
-    regular: applyDarkModeFilter("#e5e5e5"),
-  },
-} as const;
+const makeGridColors = (bold: string, regular: string) =>
+  ({
+    [THEME.LIGHT]: { bold, regular },
+    [THEME.DARK]: {
+      bold: applyDarkModeFilter(bold),
+      regular: applyDarkModeFilter(regular),
+    },
+  } as const);
+
+const GridLineColor = makeGridColors("#dddddd", "#e5e5e5");
+const GridBackgroundColor = makeGridColors("#c9d5e0", "#dce4eb");
 
 const strokeGrid = (
   context: CanvasRenderingContext2D,
-  /** grid cell pixel size */
-  gridSize: number,
-  /** setting to 1 will disble bold lines */
-  gridStep: number,
-  scrollX: number,
-  scrollY: number,
-  zoom: Zoom,
-  theme: StaticCanvasRenderConfig["theme"],
-  width: number,
-  height: number,
+  opts: {
+    gridSize: number;
+    gridStep: number;
+    scrollX: number;
+    scrollY: number;
+    zoom: Zoom;
+    theme: StaticCanvasRenderConfig["theme"];
+    width: number;
+    height: number;
+    gridBackground: boolean;
+  },
 ) => {
+  const {
+    gridSize,
+    gridStep,
+    scrollX,
+    scrollY,
+    zoom,
+    theme,
+    width,
+    height,
+    gridBackground,
+  } = opts;
+
   const offsetX = (scrollX % gridSize) - gridSize;
   const offsetY = (scrollY % gridSize) - gridSize;
 
@@ -73,7 +87,15 @@ const strokeGrid = (
 
   const spaceWidth = 1 / zoom.value;
 
+  const colors = gridBackground
+    ? GridBackgroundColor[theme]
+    : GridLineColor[theme];
+
   context.save();
+
+  if (gridBackground) {
+    context.setLineDash([]);
+  }
 
   // Offset rendering by 0.5 to ensure that 1px wide lines are crisp.
   // We only do this when zoomed to 100% because otherwise the offset is
@@ -94,13 +116,13 @@ const strokeGrid = (
 
     const lineWidth = Math.min(1 / zoom.value, isBold ? 4 : 1);
     context.lineWidth = lineWidth;
-    const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
 
     context.beginPath();
-    context.setLineDash(isBold ? [] : lineDash);
-    context.strokeStyle = isBold
-      ? GridLineColor[theme].bold
-      : GridLineColor[theme].regular;
+    if (!gridBackground) {
+      const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
+      context.setLineDash(isBold ? [] : lineDash);
+    }
+    context.strokeStyle = isBold ? colors.bold : colors.regular;
     context.moveTo(x, offsetY - gridSize);
     context.lineTo(x, Math.ceil(offsetY + height + gridSize * 2));
     context.stroke();
@@ -115,13 +137,13 @@ const strokeGrid = (
 
     const lineWidth = Math.min(1 / zoom.value, isBold ? 4 : 1);
     context.lineWidth = lineWidth;
-    const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
 
     context.beginPath();
-    context.setLineDash(isBold ? [] : lineDash);
-    context.strokeStyle = isBold
-      ? GridLineColor[theme].bold
-      : GridLineColor[theme].regular;
+    if (!gridBackground) {
+      const lineDash = [lineWidth * 3, spaceWidth + (lineWidth + spaceWidth)];
+      context.setLineDash(isBold ? [] : lineDash);
+    }
+    context.strokeStyle = isBold ? colors.bold : colors.regular;
     context.moveTo(offsetX - gridSize, y);
     context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
     context.stroke();
@@ -262,17 +284,17 @@ const _renderStaticScene = ({
 
   // Grid
   if (renderGrid) {
-    strokeGrid(
-      context,
-      appState.gridSize,
-      appState.gridStep,
-      appState.scrollX,
-      appState.scrollY,
-      appState.zoom,
-      renderConfig.theme,
-      normalizedWidth / appState.zoom.value,
-      normalizedHeight / appState.zoom.value,
-    );
+    strokeGrid(context, {
+      gridSize: appState.gridSize,
+      gridStep: appState.gridStep,
+      scrollX: appState.scrollX,
+      scrollY: appState.scrollY,
+      zoom: appState.zoom,
+      theme: renderConfig.theme,
+      width: normalizedWidth / appState.zoom.value,
+      height: normalizedHeight / appState.zoom.value,
+      gridBackground: appState.gridBackground,
+    });
   }
 
   const groupsToBeAddedToFrame = new Set<string>();
